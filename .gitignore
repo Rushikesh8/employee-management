@@ -1,1 +1,4 @@
 venv/
+# Python # 
+*.py[cod] 
+*$py.class 
