@@ -14,4 +14,4 @@ class Employee(models.Model):
     gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
     designation = models.CharField(max_length=100)
     manager = models.CharField(max_length=150)
-    picture = models.ImageField(upload_to='employee_pictures')
+    picture = models.ImageField(upload_to='employee_pictures',null=True,blank=True)

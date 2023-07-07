@@ -1,0 +1,59 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    {% if messages %}
+    {% for message in messages %}
+    
+    {% if message.tags == 'error' %}
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+        
+        </div>
+      </div>
+    {% else %}
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+            <!-- <p class="text-sm">Make sure you know how these changes affect you.</p> -->
+        </div>
+      </div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+		
+        <div class="w-full max-w-xs mx-auto my-10">
+            <form method="POST" enctype="multipart/form-data">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {% csrf_token %}
+                <h4 class="text-xl mb-4 font-bold text-teal-600 text-center">Login</h2>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" name="email" placeholder="Email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            
+                <label for="password" class="block text-gray-700 text-sm font-bold my-2">Password</label>
+                <input type="password" name="password" id="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                
+                <div class="flex items-center justify-end mt-2 mb-4">
+                    <a href="/employee-registration/"> <p class="text-xs font-bold text-teal-400 cursor-pointer">Don't have an Account ?</p></a>
+                </div>
+                <div class="flex items-center justify-center my-4">
+                    <button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Login</button>
+                </div>
+                
+            </form>
+            </div>
+          
+          </div>
+	</body>
+</html>

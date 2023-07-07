@@ -1,23 +1,95 @@
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login,logout
+from django.shortcuts import render, redirect
 from django.shortcuts import redirect,render
 from accounts.dbapi import get_user,create_user
-from employees.dbapi import create_employee
+from employees.dbapi import create_employee,all_employees,get_employee
+from accounts.dbapi import get_user
+from .helper import update_db_object
+
+def employee_login(request):
+    if request.method != "POST" and request.user.is_anonymous:
+        return render(request, 'login.html')
+    
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        try:
+            user = get_user(email=email)
+        except ObjectDoesNotExist:
+            user = None
+
+
+        if user and user.password == password.strip() and user.is_active:
+            login(request, user)
+            return redirect('/get-all-employees/') 
+        else:
+            messages.error(request, 'Invalid email or password')
+            return render(request, 'login.html')
+
+    return render(request, 'login.html')
+
+def get_all_employees(request):
+    employees = list()
+    if not request.user.is_anonymous:
+        employees = all_employees()
+    return render(request, 'home_page.html', context={"employees":employees})
+
+def edit_employee(request,employee_id):
+    if request.user.is_anonymous:
+        return redirect('/login/')
+    
+    try:
+        employee = get_employee(id=employee_id)
+    except ObjectDoesNotExist:
+        messages.error(request, 'Employee does not exist')
+        employees = all_employees()
+        return render(request, 'home_page.html', context={"employees":employees})
+    
+    if request.method == 'POST' and employee:
+        update_db_object(employee,request.POST)
+        return redirect('/get-all-employees/')
+    
+    return render(request,'edit.html',context={"employee":employee})
+
+def delete_employee(request,employee_id):
+    if request.user.is_anonymous:
+        return redirect('/login/')
+    
+    try:
+        employee = get_employee(id=employee_id)
+    except ObjectDoesNotExist:
+        messages.error(request, 'Employee does not exist')
+        employees = all_employees()
+        return render(request, 'home_page.html', context={"employees":employees})
+    
+    if employee:
+        employee.delete()
+    
+    return redirect('/get-all-employees/')
+    
+def logout_view(request):
+    logout(request)
+    return redirect('/login/')
+
+
 
 def employee_registration(request):
     if request.method == 'POST':
 
         try:
             user = get_user(email=request.POST['email'])
-            messages.error(request, 'Username already exists')
+            messages.error(request, 'User with email already exists')
             return render(request, 'registration.html')
         except ObjectDoesNotExist:
             user = create_user(email=request.POST['email'],password=request.POST['password'])
         
         employee_info = {
             "user_id": user.id,
-            "email" : request.POST['email'],
-            "password" : request.POST['password'],
+            # "email" : request.POST['email'],
+            # "password" : request.POST['password'],
             "name" : request.POST['name'],
             "date_of_birth" : request.POST['date_of_birth'],
             "date_of_joining" : request.POST['date_of_joining'],
@@ -28,14 +100,16 @@ def employee_registration(request):
         }
 
         try:
-            create_employee(**employee_info)
-            # return redirect('login')
+            user = create_employee(**employee_info)
         except Exception as e:
+             messages.error(request, 'Error while registering employee')
              return render(request, 'registration.html')
-
         
-    
+        if user:
+            return redirect('/login/')
+
     return render(request, 'registration.html')
+
 
 
 

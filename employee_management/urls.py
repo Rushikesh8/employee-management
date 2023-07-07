@@ -17,9 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from employees.views import employee_registration
+from employees.views import employee_registration,employee_login,get_all_employees,edit_employee,delete_employee,logout_view
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
-    path('employee-registration/', employee_registration),
+    path('employee-registration/', employee_registration, name="employee-registration"),
+    path('login/', employee_login, name="login"),
+    path('logout/', logout_view, name="logout"),
+    path('get-all-employees/', get_all_employees, name="get-all-employees"),
+    path('edit-employee/<str:employee_id>/', edit_employee, name="edit-employee"),
+    path('delete-employee/<str:employee_id>/', delete_employee, name="delete-employee"),
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

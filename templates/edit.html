@@ -1,0 +1,84 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    {% if messages %}
+    {% for message in messages %}
+    
+    {% if message.tags == 'error' %}
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+        
+        </div>
+      </div>
+    {% else %}
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+            <!-- <p class="text-sm">Make sure you know how these changes affect you.</p> -->
+        </div>
+      </div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+		
+        <div class="w-full max-w-xs mx-auto my-10">
+            <form method="POST" enctype="multipart/form-data">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {% csrf_token %}
+                <h4 class="text-xl mb-4 font-bold text-teal-600 text-center">Edit Employee</h2>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" name="email" placeholder="Email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.user.email }}" required>
+            
+                <label for="password" class="block text-gray-700 text-sm font-bold my-2">Password</label>
+                <input type="password" name="password" id="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.user.password }}" required>
+            
+                <label for="name" class="block text-gray-700 text-sm font-bold my-2">Name</label>
+                <input type="text" name="name" id="name" placeholder="Name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.name }}" required>
+            
+                <label for="date_of_birth" class="block text-gray-700 text-sm font-bold my-2">Date of Birth</label>
+                <input type="date" name="date_of_birth" id ="date_of_birth" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.date_of_birth|date:'Y-m-d' }}" required>
+            
+                <label for="date_of_joining" class="block text-gray-700 text-sm font-bold my-2">Date of Joining</label>
+                <input type="date" name="date_of_joining" id="date_of_joining" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{  employee.date_of_joining|date:'Y-m-d' }}" required>
+            
+                <label for="gender" class="block text-gray-700 text-sm font-bold my-2">Gender</label>
+                <input type="text" name="gender" id="gender" placeholder="Gender" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.gender }}" required>
+            
+                <label for="designation" class="block text-gray-700 text-sm font-bold my-2">Designation</label>
+                <input type="text" name="designation" id="designation" placeholder="Designation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.designation }}" required>
+            
+                <label for="manager" class="block text-gray-700 text-sm font-bold my-2">Manager</label>
+                <input type="text" name="manager" id="manager" placeholder="Manager" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.manager }}" required>
+            
+                <label for="picture" class="block text-gray-700 text-sm font-bold my-2">Employee Picture</label>
+                <input type="file" name="picture" id ="picture" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ employee.picture.name }}">
+                <div class="flex items-center justify-center my-4">
+                    <button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Edit</button>
+                </div>
+                
+            </form>
+            </div>
+          
+          </div>
+	</body>
+</html>
+
+
+
+
+
+
+
+  

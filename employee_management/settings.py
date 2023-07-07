@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    'employees'
+    'employees',
+    'tailwind',
+    'theme'
 ]
 
 MIDDLEWARE = [
@@ -114,6 +116,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+# AUTHENTICATION_BACKENDS = [
+#     'accounts.backends.EmailBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
 
 
 # Static files (CSS, JavaScript, Images)
