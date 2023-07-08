@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db.models import Q
+import pandas as pd
 import csv
 from django.contrib.auth import login,logout
 from django.shortcuts import render, redirect
@@ -9,7 +10,7 @@ from django.shortcuts import redirect,render
 from accounts.dbapi import get_user,create_user
 from employees.dbapi import create_employee,all_employees,get_employee,filter_employees
 from accounts.dbapi import get_user
-from .helper import update_db_object
+from .helper import update_db_object,get_date_object
 
 def employee_login(request):
     if request.method != "POST" and request.user.is_anonymous:
@@ -145,6 +146,53 @@ def export_employee(request):
             ]
             writer.writerow(row)
     return response
+
+def bulk_employee_registation(request):
+    if request.method == 'POST':
+        file = request.FILES['employee_file']
+        df = pd.DataFrame()
+
+        if file.name.endswith('.csv'):
+            df = pd.read_csv(file)
+        if file.name.endswith(('.xls', '.xlsx')):
+            df = pd.read_excel(file)
+
+        failed_record = list()
+        if not df.empty:
+            for _, row in df.iterrows():
+                try:
+                    user = get_user(email=row.get('Email',str()))
+                    employee_instance = filter_employees(user_id=user.id).first()
+                    if user and employee_instance:
+                        failed_record.append(row)
+                        continue
+                except ObjectDoesNotExist:
+                    user = create_user(email=row.get('Email',str()),password=row.get('Password',str()))
+
+            employee_info = {
+                "user_id": user.id,
+                "name" : row.get('Name',str()),
+                "date_of_birth" : get_date_object(row.get('Date_of_Birth',str())),
+                "date_of_joining" : get_date_object(row.get('Date_of_Joining',str())),
+                "gender" : row.get('Gender',str()),
+                "designation" : row.get('Designation',str()),
+                "manager" : row.get('Manager',str()),
+                # "picture" : request.FILES['picture']
+            }
+
+            try:
+                employee = create_employee(**employee_info)
+            except Exception as e:
+                failed_record.append(row)
+
+        if not failed_record:
+            return redirect('/login/')
+        else:
+            messages.error(request, f'Registration of some employee failed')
+            return render(request, 'bulk_upload.html')
+
+
+    return render(request, 'bulk_upload.html')
 
 
 

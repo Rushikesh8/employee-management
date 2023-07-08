@@ -24,7 +24,8 @@ from employees.views import (employee_registration,
                              delete_employee,
                              logout_view,
                              export_employee,
-                             employee_search)
+                             employee_search,
+                             bulk_employee_registation)
 
 urlpatterns = [
     
@@ -36,7 +37,9 @@ urlpatterns = [
     path('edit-employee/<str:employee_id>/', edit_employee, name="edit-employee"),
     path('delete-employee/<str:employee_id>/', delete_employee, name="delete-employee"),
     path('export-employees/', export_employee, name="export-employees"),
-    path('search-employees/', employee_search, name="search-employees")
+    path('search-employees/', employee_search, name="search-employees"),
+    path('bulk-employee-registration/', bulk_employee_registation, name="bulk-employee-registration")
+
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
