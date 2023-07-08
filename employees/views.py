@@ -1,10 +1,13 @@
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+from django.db.models import Q
+import csv
 from django.contrib.auth import login,logout
 from django.shortcuts import render, redirect
 from django.shortcuts import redirect,render
 from accounts.dbapi import get_user,create_user
-from employees.dbapi import create_employee,all_employees,get_employee
+from employees.dbapi import create_employee,all_employees,get_employee,filter_employees
 from accounts.dbapi import get_user
 from .helper import update_db_object
 
@@ -34,6 +37,15 @@ def employee_login(request):
 def get_all_employees(request):
     employees = list()
     if not request.user.is_anonymous:
+        employees = all_employees()
+    return render(request, 'home_page.html', context={"employees":employees})
+
+
+def employee_search(request):
+    query = request.GET.get('search')
+    if query:
+        employees = filter_employees(Q(name__icontains=query))
+    else:
         employees = all_employees()
     return render(request, 'home_page.html', context={"employees":employees})
 
@@ -109,6 +121,35 @@ def employee_registration(request):
             return redirect('/login/')
 
     return render(request, 'registration.html')
+
+def export_employee(request):
+    if request.user.is_anonymous:
+        return redirect('/login/')
+    
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="employee.csv"'
+    writer = csv.writer(response)
+    headrow = ["Name","Date of Birth","Date of Joining","Gender","Designation","Manager","Email"]
+    writer.writerow(headrow)
+    employees = all_employees()
+    if employees.exists():
+        for employee in employees.iterator():
+            row = [
+                employee.name,
+                employee.date_of_birth,
+                employee.date_of_joining,
+                employee.gender,
+                employee.designation,
+                employee.manager,
+                employee.user.email
+            ]
+            writer.writerow(row)
+    return response
+
+
+
+
+
 
 
 

@@ -9,3 +9,6 @@ def all_employees() -> QuerySet:
 
 def get_employee(*args,**kwargs) -> Employee:
     return Employee.objects.get(*args,**kwargs)
+
+def filter_employees(*args,**kwargs) -> QuerySet:
+    return Employee.objects.filter(*args,**kwargs)

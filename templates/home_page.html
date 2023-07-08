@@ -37,10 +37,29 @@
     {% endif %}
 		
         <div class="w-full mx-auto my-10 px-4">
-            <div class="flex items-center justify-end px-4 pb-4">
+            <div class="flex items-center justify-end gap-x-5  pb-4" style="column-gap: 1rem;">
+              <div>
+                <form method="GET" action="{% url 'search-employees' %}">
+                  <!-- <input type="text" name="search" placeholder="Search Employee" value="{{ request.GET.search }}">
+                  <button type="submit">Search</button> -->
+                  <div class="relative text-gray-600">
+                    <input type="search" name="search" placeholder="Search" value="{{ request.GET.search }}" class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none">
+                    <button type="submit" class="absolute mt-3 mr-4">
+                      <!-- <span class="material-symbols-outlined">
+                        search
+                        </span> -->
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class="mr-4">
+                <a href="{% url 'export-employees' %}"><button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">Download</button></a>
+              </div>
+                <div>
                 <a href="{% url 'logout'%}"><span class="material-symbols-outlined cursor-pointer">
                     logout
                     </span></a>
+                  </div>
 
             </div>
             <table class="min-w-full divide-y divide-gray-400 ">
