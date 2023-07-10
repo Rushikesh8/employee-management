@@ -94,12 +94,15 @@
                             </span>
                         {% endif %}  
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ employee.user.email }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap cursor-pointer">{{ employee.user.email }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">
   
                         <!-- <a href=""><i class="material-symbols-outlined"></i></a> -->
                         <a href="{% url 'edit-employee' employee.id %}"><span class="material-symbols-outlined cursor-pointer">edit</span></a>
                         <a href="{% url 'delete-employee' employee.id %}"><span class="material-symbols-outlined cursor-pointer">delete</span></a>
+                        <a href="{% url 'get-emails' employee.id %}"><span class="material-symbols-outlined cursor-pointer">
+                          mail
+                          </span></a>
                         <!-- <a href=""><i class="fas fa-trash text-red-600 hover:text-red-900 ml-3"></i></a> -->
                       </td>
                     </tr>

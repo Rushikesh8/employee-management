@@ -1,0 +1,65 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    {% if messages %}
+    {% for message in messages %}
+    
+    {% if message.tags == 'error' %}
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+        
+        </div>
+      </div>
+    {% else %}
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="font-bold text-center">{{message}}</p>
+            <!-- <p class="text-sm">Make sure you know how these changes affect you.</p> -->
+        </div>
+      </div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+		
+        <div class="w-full max-w-xs mx-auto my-10">
+            <form method="POST" enctype="multipart/form-data">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {% csrf_token %}
+                <h4 class="text-xl mb-4 font-bold text-teal-600 text-center">Reply Email</h2>
+                <label for="area" class="block text-gray-700 text-sm font-bold mb-2">Reply</label>
+                <input type="text" name="reply" placeholder="Reply" id="area" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                
+                <div class="flex items-center justify-center my-4">
+                    <button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Send</button>
+                </div>
+                
+            </form>
+            <div class="flex justify-center items-center">
+                <a href="{% url 'get-emails' employee_id %}" class="block">
+                    <button
+                        class="select-none rounded-lg bg-teal-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-teal-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none my-4"
+                        type="button"
+                        data-ripple-light="true"
+                        >
+                        Back
+                    </button>
+                    </a>
+        
+            </div>
+            </div>
+          
+          </div>
+	</body>
+</html>

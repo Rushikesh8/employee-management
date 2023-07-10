@@ -1,0 +1,14 @@
+<script>
+    const replyButtons = document.querySelectorAll('.reply-btn');
+    console.log('replyButtons',replyButtons)
+    console.log(document.getElementById("dummy"))
+    replyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            console.log('Here')
+            const emailId = button.dataset.emailId;
+            const form = document.querySelector(`.reply-form[data-email-id="${emailId}"]`);
+
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+</script>
